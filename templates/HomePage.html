@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Task Manager - Home</title>
+    <style>
+        :root {
+            --primary-color: #2e2e2e;
+            --primary-dark: #d48c3a;
+            --secondary-color: #6e6e6e;
+            --accent-color: #f72585;
+            --success-color: #2ecc71;
+            --warning-color: #ff6f00;
+            --danger-color: #e74c3c;
+            --light-bg: #f8f9fa;
+            --dark-bg: #343a40;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --light-text: #6c757d;
+            --border-radius: 10px;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 30px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .create-btn {
+            background-color: white;
+            color: var(--primary-color);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 24px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .create-btn:hover {
+            background-color: var(--light-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .create-btn-complete {
+            background-color: white;
+            color: var(--primary-color);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 24px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .create-btn-complete:hover {
+            background-color: var(--light-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        .filter-bar {
+            background-color: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-select {
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            outline: none;
+            font-size: 14px;
+            color: var(--text-color);
+        }
+
+        .search-input {
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            outline: none;
+            font-size: 14px;
+            color: var(--text-color);
+            width: 200px;
+        }
+
+        .task-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .task-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .task-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .task-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 5px;
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .task-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            color: var(--light-text);
+        }
+
+        .task-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .task-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--light-text);
+        }
+
+        .task-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .task-body {
+            padding: 20px;
+        }
+
+        .task-description {
+            color: var(--text-color);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .subtasks-header {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .subtasks-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .subtask-item {
+            background-color: var(--light-bg);
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .subtask-item-done {
+            border-left: 3px solid var(--success-color);
+
+        }
+
+        .subtask-item-done-button {
+            display: none;
+        }
+
+        .subtask-item-open {
+            border-left: 3px solid var(--danger-color);
+
+        }
+
+        .subtask-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .subtask-description {
+            font-size: 14px;
+            color: var(--light-text);
+            line-height: 1.5;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .status-new {
+            background-color: var(--success-color);
+        }
+
+        .status-progress {
+            background-color: var(--primary-color);
+        }
+
+        .status-waiting {
+            background-color: var(--warning-color);
+        }
+
+        .status-closed {
+            background-color: #95a5a6;
+        }
+
+        .priority-badge {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .priority-high {
+            color: var(--danger-color);
+        }
+
+        .priority-medium {
+            color: var(--warning-color);
+        }
+
+        .priority-low {
+            color: var(--success-color);
+        }
+
+        .category-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+        }
+
+        .category-casa {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+        }
+
+        .category-pessoal {
+            background-color: rgba(58, 90, 11, 0.1);
+            color: var(--secondary-color);
+        }
+
+        .category-lazer {
+            background-color: rgba(247, 37, 133, 0.1);
+            color: var(--accent-color);
+        }
+
+        .category-crescimento {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success-color);
+        }
+
+        .dates {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .date-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            color: var(--light-text);
+        }
+
+        .no-tasks {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            text-align: center;
+            box-shadow: var(--box-shadow);
+        }
+
+        .no-tasks h3 {
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+
+        .no-tasks p {
+            color: var(--light-text);
+            margin-bottom: 20px;
+        }
+
+        .expand-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: auto;
+        }
+
+        .task-footer {
+            padding: 15px 20px;
+            background-color: var(--light-bg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #eee;
+        }
+
+        .user-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .user-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .filter-group {
+                flex-wrap: wrap;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .task-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .task-controls {
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>Smart Task Manager</h1>
+                <p>Visualize e gerencie suas tarefas</p>
+            </div>
+            <a href="{{ url_for('concluded') }}" class="create-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#008000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="4 12 9 17 20 6"></polyline>
+                  </svg>
+                Tarefas Concluídas
+            </a>
+            <a href="{{ url_for('creation') }}"  class="create-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Nova Tarefa
+            </a>
+        </div>
+
+        <div class="task-list" id="TaskListHomePage">
+
+        </div>
+        
+    </div>
+
+    <script>
+        const taskData = {{ tasks_json|safe }};
+        
+        function getCategoryClass(category) {
+            // Return the appropriate class based on category
+            if (category === 'Pessoal') {
+                return 'category-pessoal';
+            } else if (category === 'Casa') {
+                return 'category-casa';
+            } else if (category === 'Lazer') {
+                return 'category-lazer';
+            } else if (category === 'Trabalho') {
+                return 'category-crescimento';
+            } else {
+                // Default class if none match
+                return 'category-pessoal';
+            }
+        }
+
+        function getWorkflowClass(workflow) {
+            // Return the appropriate class based on category
+            if (workflow === 'New') {
+                return 'status-new';
+            } else if (workflow === 'In Progress') {
+                return 'status-progress';
+            } else if (workflow === 'Waiting') {
+                return 'status-waiting';
+            } else if (workflow === 'Closed') {
+                return 'status-closed';
+            } else {
+                // Default class if none match
+                return 'status-new';
+            }
+        }
+
+        function getPriorityClass(priority) {
+            // Return the appropriate class based on category
+            if (priority === 'Low') {
+                return 'priority-low';
+            } else if (priority === 'Medium') {
+                return 'priority-medium';
+            } else if (priority === 'High') {
+                return 'priority-high';
+            }else {
+                // Default class if none match
+                return 'priority-low';
+            }
+        }
+
+        function displayTasks(task) {
+            // Add subtask functionality with improved UI
+            const taskListHomePageList = document.getElementById('TaskListHomePage');
+            const taskListHomePageDiv = document.createElement('div');
+            taskListHomePageDiv.className = 'task-card';
+
+            taskListHomePageDiv.innerHTML = `
+                <div class="task-header">
+                    <div>
+                        <div class="task-title">${task.title}</div>
+                        <div class="task-meta">
+                            <span class="status-badge ${getWorkflowClass(task.workflow)}"">${task.workflow}</span>
+                            <span class="category-badge ${getCategoryClass(task.category)}">
+                                ${task.category}
+                            </span>
+                            <span class="priority-badge ${getPriorityClass(task.category)}">
+                                ${task.urgency}
+                            </span>
+                            <a class="task-btn create-btn-complete" href='complete_task/${task.id}'>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#008000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="4 12 9 17 20 6"></polyline>
+                                </svg>
+                                <p>Complete</p>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="task-controls">
+                        <button class="task-btn" onclick="deleteFunction(${task.id})">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                        </button>
+                        
+                    </div>
+                </div>
+                
+                <div class="task-body">
+                    <p class="task-description">${task.description}</p>
+                    
+                    <div class="dates">
+                        <div class="date-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            Criado em: ${task.create_date}
+                        </div>
+                        <div class="date-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            Prazo: ${task.due_date}
+                        </div>
+                        <div class="date-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            Tempo Estimado: ${task.time_expectancy}min
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px;">
+                        <div class="subtasks-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="8" y1="6" x2="21" y2="6"></line>
+                                <line x1="8" y1="12" x2="21" y2="12"></line>
+                                <line x1="8" y1="18" x2="21" y2="18"></line>
+                                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                            </svg>
+                            Subtarefas (${task.subtasks.length})
+                        </div>
+                        
+                        <div class="subtasks-list" id="SubTaskListHomePage">
+                            <div class="subtask-item subtask-item-done">
+                                <div class="subtask-title">
+                                    example done
+                                </div>
+                                <p class="subtask-description">example done <br><br></p> 
+                                
+                                <button class="task-btn subtask-item-done-button">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#008000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="4 12 9 17 20 6"></polyline>
+                                      </svg>
+                                </button>
+                            </div>
+                            <div class="subtask-item subtask-item-open">
+                                <div class="subtask-title">
+                                    example open
+                                </div>
+                                <p class="subtask-description">example open <br><br></p> 
+                                
+                                <button class="task-btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#008000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="4 12 9 17 20 6"></polyline>
+                                      </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="task-footer">
+                    <div class="user-group">
+                        <span>Para : ${task.assigned_user}</span>
+                    </div>
+                    
+                    <div class="user-group">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span>Criado por : ${task.created_by}</span>
+                    </div>
+                </div>
+            `;
+            taskListHomePageList.appendChild(taskListHomePageDiv);
+
+            // Now, get a reference to the subtask list container in this specific task card
+            const subtasksList = taskListHomePageDiv.querySelector('#SubTaskListHomePage');
+            console.log(subtasksList);
+    
+            // Clear any existing content (the hardcoded examples)
+            subtasksList.innerHTML = '';
+    
+            // Loop through each subtask in the task and create elements
+            task.subtasks.forEach(subtask => {
+                // Create subtask element
+                const subtaskItem = document.createElement('div');
+        
+                // Set appropriate class based on completion status
+                subtaskItem.className = subtask.workflow ? 'subtask-item subtask-item-done' : 'subtask-item subtask-item-open';
+        
+                // Add the inner HTML content
+                subtaskItem.innerHTML = `
+                <div class="subtask-title">
+                    ${subtask.title}
+                </div>
+                <p class="subtask-description">${subtask.description}<br><br></p>
+            
+                <a class="task-btn ${subtask.workflow ? 'subtask-item-done-button' : ''}" href='complete_subtask/${subtask.task_id}/${subtask.id}'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#008000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="4 12 9 17 20 6"></polyline>
+                    </svg>
+                </a>
+                `;
+                // Add the subtask to the list
+                subtasksList.appendChild(subtaskItem);
+            });
+        }
+
+
+
+        function deleteFunction(taskid){
+            let text = "Are you sure you whant to delete the task?";
+            if (confirm(text) == true) {
+                window.location.href = "{{url_for('delete_task', taskid='') }}"+taskid;
+            }
+        }
+
+        taskData.forEach(task => {
+            displayTasks(task);
+        });
+
+    </script>
+
+</body>
+</html>
