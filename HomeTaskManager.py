@@ -2,6 +2,9 @@ from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime
 import sqlite3
 import os
+from openai import OpenAI
+import json
+
 
 app = Flask(__name__)
 
@@ -47,6 +50,71 @@ def init_db():
 
 # Initialize database
 init_db()
+
+@app.route('/askaifortask')
+def createTasksAI():
+
+    # Connect to database
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row  # This enables column access by name
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT * FROM tasks WHERE workflow != "Done"')
+    tasks = cursor.fetchall()
+
+    client = OpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key="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",
+    )
+
+    completion = client.chat.completions.create(
+        extra_headers={
+            "HTTP-Referer": "<YOUR_SITE_URL>", # Optional. Site URL for rankings on openrouter.ai.
+            "X-Title": "<YOUR_SITE_NAME>", # Optional. Site title for rankings on openrouter.ai.
+        },
+        extra_body={},
+        model="deepseek/deepseek-r1:free",
+        messages=[
+            {
+                "role": "user",
+                "content": """category:(Pessoal, Casa, Trabalho, Lazer) choose one of the 4 randomly ,The json should be in Portuguese from Portugal and adapt the Task with the category. Give me in form of json a daily task to improve my day that can be done any time of the day, with subtasks describing the task and giving a step by step to make the task append, the format of the json should be equal to this
+                    Task = {title: '', description: '', due_date:today date like 27/03/2025, create_date:today date like 27/03/2025, category:one of the ones that u choose, assigned_user:Always Any,  created_by: Always Deepseek,time_expectancy:defined by you,workflow:Equal to new, urgency:sempre igual a Low, subtaks:{title:"",description:""},...}
+                
+                Dont Give tasks equal to this ones:
+                """+ str(tasks)
+            }
+        ]
+    )
+    try:
+        y = ""
+        y = json.loads(str(completion.choices[0].message.content[8:-3]))
+        print(y)
+        #print(title, description, due_date, create_date, category, assigned_user, created_by, time_expectancy, workflow, urgency)
+        # Connect to database
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+
+        # Insert task into database
+        cursor.execute('''
+            INSERT INTO tasks (title, description, due_date, create_date, category, assigned_user, created_by, time_expectancy, workflow, urgency)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (y['title'],y['description'] ,y['due_date'] , y['create_date'],y['category'] ,y['assigned_user'] ,y['created_by'] ,y['time_expectancy'] ,y['workflow'] ,y['urgency'] ))
+    
+        # Get the id of the newly inserted task
+        task_id = cursor.lastrowid
+
+        for subtask in y['subtasks']:
+            cursor.execute('''
+            INSERT INTO subtasks (task_id, title, description, workflow)
+            VALUES (?, ?, ?, ?)
+            ''', (task_id, subtask["title"], subtask["description"], 0))
+
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for('index'))
+    except:
+        return redirect(url_for('index'))
 
 @app.route('/')
 def index():
@@ -213,4 +281,6 @@ def complete_task(taskid=None):
  
 
 if __name__ == '__main__':
-    app.run(host='192.168.1.224', debug=True) 
+    #Home
+    #app.run(host='192.168.1.224', debug=True) 
+    app.run(debug=True)
