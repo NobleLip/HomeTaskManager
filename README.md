@@ -2,7 +2,6 @@
 
 **HomeTaskManager** is a lightweight web-based productivity app designed to help you organize your life with tasks and subtasks. It includes an AI assistant that generates personalized, meaningful daily tasks in European Portuguese using OpenRouter's Deepseek model.
 
----
 
 ## ✨ Features
 
@@ -13,7 +12,6 @@
 - 📆 Track due dates and time estimates
 - 🛠️ Powered by Flask, SQLite, and OpenRouter
 
----
 
 ## 📦 Project Structure
 
@@ -28,7 +26,6 @@ HomeTaskManager/
 ├── README.md                    # Project documentation
 ```
 
----
 
 ## 🚀 Getting Started
 
@@ -63,7 +60,6 @@ python HomeTaskManager.py
 http://127.0.0.1:5000
 ```
 
----
 
 ## 🤖 AI Task Generator
 
@@ -93,7 +89,6 @@ In the Home Page there is a button to generate a task.
 
 > 💡 Note: Replace the OpenRouter API key in `HomeTaskManager.py` with your own.
 
----
 
 ## 🌐 Key Routes
 
@@ -108,7 +103,6 @@ In the Home Page there is a button to generate a task.
 | `/complete_task/<taskid>`         | GET/POST | Mark a task as completed             |
 | `/complete_subtask/<taskid>/<id>` | GET/POST | Mark a subtask as completed          |
 
----
 
 
 ## 🙋 About the Author
