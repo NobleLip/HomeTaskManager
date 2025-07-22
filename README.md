@@ -38,7 +38,7 @@ HomeTaskManager/
 1. Clone the repo:
 
 ```bash
-git clone https://github.com/yourusername/HomeTaskManager.git
+git clone https://github.com/NobleLip/HomeTaskManager.git
 cd HomeTaskManager
 ```
 
