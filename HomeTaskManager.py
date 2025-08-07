@@ -79,7 +79,7 @@ def createTasksAI():
                 "role": "user",
                 "content": """category:(Pessoal, Casa, Trabalho, Lazer) choose one of the 4 randomly ,The json should be in Portuguese from Portugal and adapt the Task with the category. Give me in form of json a daily task to improve my day that can be done any time of the day, with subtasks describing the task and giving a step by step to make the task append, the format of the json should be equal to this
                     Task = {title: '', description: '', due_date:today date like 27/03/2025, create_date:today date like 27/03/2025, category:one of the ones that u choose, assigned_user:Always Any,  created_by: Always Deepseek,time_expectancy:defined by you,workflow:Equal to new, urgency:sempre igual a Low, subtaks:{title:"",description:""},...}
-                
+                Give me only the Json without any additional information please.
                 Dont Give tasks equal to this ones:
                 """+ str(tasks)
             }
